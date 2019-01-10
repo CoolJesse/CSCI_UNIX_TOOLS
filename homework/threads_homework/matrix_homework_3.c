@@ -4,7 +4,6 @@ Matrix Multiplication:|d e f| x |l m| = |(d*j+e*l+f*o) (d*k+e*m+f*p)| = |dj+el+f
                       |g h i|   |o p|   |(g*j+h*l+i*o) (g*k+h*m+i*p)|   |gj+hl+io gk+hm+ip|
 */
 
-#include <pthread.h>
 #include <stdio.h>
 #include <pthread.h>
 #include <string.h>
@@ -77,32 +76,6 @@ int main(void)
 	arguments.array1 = &array_A;
 	arguments.array2 = &array_B;
 	/*******************************************************************************/
-	/** Test arguments->arrayx *****************************************************/
-
-	/*
-	printf("matrix_multiplication_struct arguments->array1:\n");
-	for(int i=0; i<number_of_A_rows; i++)
-	{
-		for(int j=0; j<number_of_A_columns; j++)
-		{
-			printf("%d ", (*arguments.array1)[i][j]);
-		}
-		printf("\n");
-	}
-	printf("\n");
-
-	printf("matrix_multiplication_struct arguments->array2:\n");
-	for(int i=0; i<number_of_B_rows; i++)
-	{
-		for(int j=0; j<number_of_B_columns; j++)
-		{
-			printf("%d ", (*arguments.array2)[i][j]);
-		}
-		printf("\n");
-	}
-	printf("\n");
-	*/
-	/********************************************************************************/
 	/** initilize thread lock *******************************************************/
 	lock = malloc(sizeof(pthread_mutex_t));
 	err=pthread_mutex_init(lock, NULL);
@@ -124,11 +97,6 @@ int main(void)
 		}
 	}
 	/**************************************************************************************************/
-	/*
-	for(int i=0; i<number_of_threads; i++)
-		printf("thread %d id: %lu\n", i, threads[i]);
-	*/
-
 	/** Joining each thread to the main thread ********************************************************/
 
 	int *temp_array;
@@ -141,7 +109,6 @@ int main(void)
 			if(err != 0)
 				printf("Error joining thread: %d\n", err);
 
-			//array_C[i][j] = *((int*)void_ptr_return);
 			temp_array = ((int*)void_ptr_return);
 			
 			A=temp_array[1];
@@ -192,10 +159,6 @@ void *dot_product(void *arguments)
 	}
 	/****************************************************************************************************/
 	
-	//printf("In dot_product function, row_index = %d column_index = %d\n", row_index, column_index);
-	//printf("Thread ID: %lu\n", pthread_self() );
-	//printf("-------------------------------------------------------------\n");
-	
 	int sum = 0;
 	int *sum_array = (int*)malloc(3*sizeof(int));
 	
@@ -206,10 +169,7 @@ void *dot_product(void *arguments)
 	sum_array[1] = row_index;
 	sum_array[2] = column_index;
 
-	//printf("sum_array: %d %d %d\n", sum_array[0], sum_array[1], sum_array[2]);
-
 	column_index++;
-	//printf("column index: %d\n", column_index);
 
 	/** unlock mutex ***********************************************************************************/
 	err1 = pthread_mutex_unlock(lock);
@@ -218,6 +178,5 @@ void *dot_product(void *arguments)
 	/***************************************************************************************************/
 
 	pthread_exit(sum_array);
-	//pthread_exit(sum);	
-	//pthread_exit((void*) 0);
+
 }
